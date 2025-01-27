@@ -53,18 +53,84 @@ def get_datos_alumno():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-from flask import request
-
 @app.route('/eliminarDatosAlumno', methods=['POST'])
 def eliminar_datos_alumno():
     try:
         id = request.json.get('id')
         result = db.session.execute(text("SELECT eliminarUsuarioAlumno(:id)"), {'id': id})
-        db.session.commit()  # Asegúrate de confirmar la transacción
+        db.session.commit()
         if result.scalar():
             return jsonify("Eliminado con éxito")
         else:
             return jsonify("Error al eliminar")
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/insertarDatosAlumno', methods=['POST'])
+def insertar_datos_alumno():
+    try:
+        password = request.json.get('password')
+        nombre_usuario = request.json.get('nombre_usuario')
+        correo_institucional = request.json.get('correo_institucional')
+        nombre = request.json.get('nombre')
+        apellidos = request.json.get('apellidos')
+        matricula_dni = request.json.get('matricula_dni')
+        genero = request.json.get('genero')
+        universidad_origen_id = request.json.get('universidad_origen_id')
+        #query
+        result = db.session.execute(
+            text("SELECT insertarUsuarioAlumno(:password, :nombre_usuario, :correo_institucional, :nombre, :apellidos, :matricula_dni, :genero, :universidad_origen_id)"), 
+            {
+                'password': password,
+                'nombre_usuario': nombre_usuario,
+                'correo_institucional': correo_institucional,
+                'nombre': nombre,
+                'apellidos': apellidos,
+                'matricula_dni': matricula_dni,
+                'genero': genero,
+                'universidad_origen_id': universidad_origen_id
+            }
+        )
+        db.session.commit()
+        if result.scalar():
+            return jsonify("Insertado con éxito")
+        else:
+            return jsonify("Error al insertar")
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/actualizarDatosAlumno', methods=['POST'])
+def actualizar_datos_alumno():
+    try:
+        id = request.json.get('id')
+        password = request.json.get('password')
+        nombre_usuario = request.json.get('nombre_usuario')
+        correo_institucional = request.json.get('correo_institucional')
+        nombre = request.json.get('nombre')
+        apellidos = request.json.get('apellidos')
+        matricula_dni = request.json.get('matricula_dni')
+        genero = request.json.get('genero')
+        universidad_origen_id = request.json.get('universidad_origen_id')
+        #query
+        result = db.session.execute(
+            text("SELECT actualizarUsuarioAlumno(:id, :password, :nombre_usuario, :correo_institucional, :nombre, :apellidos, :matricula_dni, :genero, :universidad_origen_id)"), 
+            {
+                'id': id,
+                'password': password,
+                'nombre_usuario': nombre_usuario,
+                'correo_institucional': correo_institucional,
+                'nombre': nombre,
+                'apellidos': apellidos,
+                'matricula_dni': matricula_dni,
+                'genero': genero,
+                'universidad_origen_id': universidad_origen_id
+            }
+        )
+        db.session.commit()
+        if result.scalar():
+            return jsonify("Actualizado con éxito")
+        else:
+            return jsonify("Error al actualizar")
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
